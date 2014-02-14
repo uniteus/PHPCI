@@ -272,17 +272,18 @@ class ProjectController extends \PHPCI\Controller
 
         $options = array(
             'choose' => 'Select repository type...',
-            'github' => 'Github',
             'bitbucket' => 'Bitbucket',
+            'github' => 'Github',
             'gitlab' => 'Gitlab',
-            'remote' => 'Remote URL',
-            'local' => 'Local Path',
+            'gitolite' => 'Gitolite',
             'hg'    => 'Mercurial',
+            'local' => 'Local Path',
+            'remote' => 'Remote URL',
             );
 
         $field = new Form\Element\Select('type');
         $field->setRequired(true);
-        $field->setPattern('^(github|bitbucket|gitlab|remote|local|hg)');
+        $field->setPattern('^(github|bitbucket|gitlab|remote|local|hg|gitolite)');
         $field->setOptions($options);
         $field->setLabel('Where is your project hosted?');
         $field->setClass('form-control');
@@ -397,6 +398,10 @@ class ProjectController extends \PHPCI\Controller
                 'gitlab' => array(
                     'regex' => '`^(.*)@(.*):(.*)/(.*)\.git`',
                     'message' => 'GitLab Repository name must be in the format "user@domain.tld:owner/repo.git"'
+                ),
+                'gitolite' => array(
+                    'regex' => '`^(.*)@(.*):(.*)\.git`',
+                    'message' => 'GitLab Repository name must be in the format "user@domain.tld:repo.git"'
                 ),
                 'github' => array(
                     'regex' => '/^[a-zA-Z0-9_\-]+\/[a-zA-Z0-9_\-\.]+$/',

@@ -53,6 +53,9 @@ class BuildFactory
             case 'gitlab':
                 $type = 'GitlabBuild';
                 break;
+            case 'gitolite':
+                $type = 'GitoliteBuild';
+                break;
             case 'hg':
                 $type = 'MercurialBuild';
                 break;
