@@ -85,6 +85,9 @@ class DaemoniseCommand extends Command
 
             try {
                 $buildCount = $runner->run($emptyInput, $output);
+            } catch (\PDOException $e) {
+                $this->run = false;
+                continue;
             } catch (\Exception $e) {
                 var_dump($e);
             }
