@@ -149,6 +149,7 @@ class BuildController extends \PHPCI\Controller
     */
     protected function cleanLog($log)
     {
+        $log = htmlSpecialChars($log, ENT_QUOTES);
         $log = str_replace('[0;32m', '<span style="color: green">', $log);
         $log = str_replace('[0;31m', '<span style="color: red">', $log);
         $log = str_replace('[0m', '</span>', $log);
