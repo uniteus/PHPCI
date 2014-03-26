@@ -69,7 +69,7 @@ class DaemoniseCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // Write PID file
-        file_put_contents(PHPCI_DIR . '/daemon/daemon.pid', getmygid());
+        file_put_contents(PHPCI_DIR . '/daemon/daemon.pid', getmypid());
         // Remove PID file on shutdown
         register_shutdown_function(function() {
             unlink(PHPCI_DIR . '/daemon/daemon.pid');
