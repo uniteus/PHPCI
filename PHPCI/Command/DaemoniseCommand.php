@@ -68,9 +68,12 @@ class DaemoniseCommand extends Command
     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $cmd = "echo %s > '%s/daemon/daemon.pid'";
-        $command = sprintf($cmd, getmypid(), PHPCI_DIR);
-        exec($command);
+        // Write PID file
+        file_put_contents(PHPCI_DIR . '/daemon/daemon.pid', getmygid());
+        // Remove PID file on shutdown
+        register_shutdown_function(function() {
+            unlink(PHPCI_DIR . '/daemon/daemon.pid');
+        });
 
         $this->output = $output;
         $this->run   = true;

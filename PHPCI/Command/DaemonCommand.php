@@ -29,6 +29,12 @@ use PHPCI\BuildFactory;
 */
 class DaemonCommand extends Command
 {
+    const NOT_RUNNING = 'notrunning',
+        RUNNING = 'running',
+        ALREADY_STARTED = 'alreadystarted',
+        NOT_STARTED = 'notstarted';
+
+
     /**
      * @var \Monolog\Logger
      */
@@ -78,11 +84,11 @@ class DaemonCommand extends Command
 
     protected function startDaemon()
     {
-
-        if (file_exists(PHPCI_DIR.'/daemon/daemon.pid')) {
+        $status = $this->statusDaemon();
+        if ($status === self::RUNNING) {
             echo "Already started\n";
             $this->logger->warning("Daemon already started");
-            return "alreadystarted";
+            return self::ALREADY_STARTED;
         }
 
         $logfile = PHPCI_DIR."/daemon/daemon.log";
@@ -95,10 +101,11 @@ class DaemonCommand extends Command
     protected function stopDaemon()
     {
 
-        if (!file_exists(PHPCI_DIR.'/daemon/daemon.pid')) {
+        $status = $this->statusDaemon();
+        if ($status === self::NOT_RUNNING) {
             echo "Not started\n";
             $this->logger->warning("Can't stop daemon as not started");
-            return "notstarted";
+            return self::NOT_STARTED;
         }
 
         $cmd = "kill $(cat %s/daemon/daemon.pid)";
@@ -113,18 +120,18 @@ class DaemonCommand extends Command
 
         if (!file_exists(PHPCI_DIR.'/daemon/daemon.pid')) {
             echo "Not running\n";
-            return "notrunning";
+            return self::NOT_RUNNING;
         }
 
         $pid = trim(file_get_contents(PHPCI_DIR.'/daemon/daemon.pid'));
         $pidcheck = sprintf("/proc/%s", $pid);
         if (is_dir($pidcheck)) {
             echo "Running\n";
-            return "running";
+            return self::RUNNING;
         }
 
         unlink(PHPCI_DIR.'/daemon/daemon.pid');
         echo "Not running\n";
-        return "notrunning";
+        return self::NOT_RUNNING;
     }
 }
