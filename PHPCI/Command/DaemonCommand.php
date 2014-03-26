@@ -86,7 +86,6 @@ class DaemonCommand extends Command
     {
         $status = $this->statusDaemon();
         if ($status === self::RUNNING) {
-            echo "Already started\n";
             $this->logger->warning("Daemon already started");
             return self::ALREADY_STARTED;
         }
@@ -103,7 +102,6 @@ class DaemonCommand extends Command
 
         $status = $this->statusDaemon();
         if ($status === self::NOT_RUNNING) {
-            echo "Not started\n";
             $this->logger->warning("Can't stop daemon as not started");
             return self::NOT_STARTED;
         }
@@ -119,19 +117,16 @@ class DaemonCommand extends Command
     {
 
         if (!file_exists(PHPCI_DIR.'/daemon/daemon.pid')) {
-            echo "Not running\n";
             return self::NOT_RUNNING;
         }
 
         $pid = trim(file_get_contents(PHPCI_DIR.'/daemon/daemon.pid'));
         $pidcheck = sprintf("/proc/%s", $pid);
         if (is_dir($pidcheck)) {
-            echo "Running\n";
             return self::RUNNING;
         }
 
         unlink(PHPCI_DIR.'/daemon/daemon.pid');
-        echo "Not running\n";
         return self::NOT_RUNNING;
     }
 }
